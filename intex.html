@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nike - Just Do It</title>
+    <meta name="description" content="Shop Nike for the latest in athletic footwear, apparel, and accessories.">
+    <link rel="icon" href="images/nike-favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Futura:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            @apply bg-white dark:bg-gray-900 font-inter transition-colors duration-300;
+        }
+        .nike-gradient {
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+        }
+        .card {
+            @apply transform transition-all duration-300 hover:scale-105 hover:shadow-2xl rounded-xl;
+        }
+        .btn {
+            @apply bg-black dark:bg-white text-white dark:text-black font-semibold py-3 px-8 rounded-full hover:bg-gray-800 dark:hover:bg-gray-200 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-blue-500/50 hover:-translate-y-1;
+        }
+        .hero-overlay::before {
+            content: '';
+            @apply absolute inset-0 bg-gradient-to-b from-black/20 to-black/60;
+        }
+        .fade-in {
+            animation: fadeIn 1.2s ease-out;
+        }
+        .staggered-fade {
+            animation: fadeIn 1.2s ease-out;
+            animation-delay: calc(0.1s * var(--i));
+        }
+        .bounce {
+            animation: bounce 0.3s ease-in-out;
+        }
+        .modal-slide {
+            animation: slideIn 0.3s ease-out;
+        }
+        .dropdown-slide {
+            animation: slideIn 0.2s ease-out;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        @keyframes slideIn {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <header class="sticky top-0 z-50 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-sm">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+            <div class="flex-none">
+                <a href="#home" class="flex items-center" aria-label="Nike Home" data-page="home">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg" alt="Nike Logo" class="h-8 sm:h-10">
+                </a>
+            </div>
+            <nav class="flex-1 hidden md:flex justify-center space-x-6 lg:space-x-10 text-gray-900 dark:text-white font-semibold text-base lg:text-lg">
+                <a href="#men" class="relative group hover:text-blue-500 dark:hover:text-blue-400 transition">Men</a>
+                <a href="#women" class="relative group hover:text-blue-500 dark:hover:text-blue-400 transition">Women</a>
+                <a href="#kids" class="relative group hover:text-blue-500 dark:hover:text-blue-400 transition">Kids</a>
+                <a href="#sale" class="relative group hover:text-blue-500 dark:hover:text-blue-400 transition">Sale</a>
+                <a href="#customise" class="relative group hover:text-blue-500 dark:hover:text-blue-400 transition">Customise</a>
+            </nav>
+            <div class="flex items-center space-x-4 lg:space-x-6">
+                <button id="mobile-menu-toggle" class="md:hidden text-gray-900 dark:text-white focus:outline-none" aria-label="Toggle menu">
+                    <i class="uil uil-bars text-2xl sm:text-3xl"></i>
+                </button>
+                <button id="search-toggle" class="text-gray-900 dark:text-white hover:text-blue-500 transition" aria-label="Search">
+                    <i class="uil uil-search text-xl sm:text-2xl"></i>
+                </button>
+                <div class="relative">
+                    <button class="btn btn-ghost btn-circle text-gray-900 dark:text-white hover:text-blue-500 transition" aria-label="Cart">
+                        <div class="indicator relative">
+                            <i class="uil uil-shopping-cart text-xl sm:text-2xl"></i>
+                            <span id="cart-count" class="absolute -top-2 -right-2 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+                        </div>
+                    </button>
+                    <div id="cart-dropdown" class="hidden absolute right-0 mt-3 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-lg z-10 dropdown-slide">
+                        <div class="p-4">
+                            <span id="cart-dropdown-count" class="text-lg font-bold text-gray-900 dark:text-white">0 Items</span>
+                            <span id="cart-dropdown-subtotal" class="block text-blue-500 dark:text-blue-400">Subtotal: ₹0</span>
+                            <div id="cart-dropdown-items" class="mt-2 max-h-48 overflow-y-auto"></div>
+                            <div class="mt-4">
+                                <a href="#cart" class="btn btn-block text-center">View Cart</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <button class="btn btn-ghost btn-circle avatar text-gray-900 dark:text-white hover:text-blue-500 transition" aria-label="User Profile">
+                        <div class="w-8 sm:w-10 rounded-full">
+                            <img alt="User Avatar" src="https://ui-avatars.com/api/?name=John+Doe&size=150" />
+                        </div>
+                    </button>
+                    <ul id="user-dropdown" class="hidden absolute right-0 mt-3 w-52 bg-white dark:bg-gray-800 rounded-lg shadow-lg z-10 dropdown-slide p-2">
+                        <li>
+                            <a href="#" class="flex justify-between items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition text-gray-900 dark:text-white">
+                                Profile
+                                <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded">New</span>
+                            </a>
+                        </li>
+                        <li><a href="#" class="block p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition text-gray-900 dark:text-white">Settings</a></li>
+                        <li><a href="#" class="block p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition text-gray-900 dark:text-white">Logout</a></li>
+                    </ul>
+                </div>
+                <button id="theme-toggle" class="text-gray-900 dark:text-white hover:text-blue-500 transition" aria-label="Toggle theme">
+                    <i class="uil uil-moon text-xl sm:text-2xl"></i>
+                </button>
+            </div>
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden w-full bg-white dark:bg-gray-800 absolute top-16 left-0 shadow-lg">
+                <nav class="flex flex-col p-4 sm:p-6 space-y-4 text-gray-900 dark:text-white font-semibold text-base sm:text-lg">
+                    <a href="#men" class="hover:bg-gray-100 dark:hover:bg-gray-700 p-3 rounded-lg transition">Men</a>
+                    <a href="#women" class="hover:bg-gray-100 dark:hover:bg-gray-700 p-3 rounded-lg transition">Women</a>
+                    <a href="#kids" class="hover:bg-gray-100 dark:hover:bg-gray-700 p-3 rounded-lg transition">Kids</a>
+                    <a href="#sale" class="hover:bg-gray-100 dark:hover:bg-gray-700 p-3 rounded-lg transition">Sale</a>
+                    <a href="#customise" class="hover:bg-gray-100 dark:hover:bg-gray-700 p-3 rounded-lg transition">Customise</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Search Modal -->
+    <div id="search-modal" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-md modal-slide">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold font-futura">Search Products</h2>
+                <button id="close-search" class="text-gray-900 dark:text-white">
+                    <i class="uil uil-times text-2xl"></i>
+                </button>
+            </div>
+            <input type="text" id="search-input" class="w-full p-3 rounded-lg border dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search for products...">
+            <div id="search-results" class="mt-4"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Home Page -->
+        <div id="home" class="page">
+            <!-- Hero Section -->
+            <section class="relative h-[60vh] sm:h-[80vh] lg:h-[90vh] bg-cover bg-center hero-overlay fade-in" style="background-image: url('https://static.nike.com/a/images/f_auto/dpr_1.3,cs_srgb/h_1711,c_limit/56fe1abe-b1e9-4936-b5de-f9906fb609c5/nike-just-do-it.jpg')">
+                <div class="container mx-auto h-full flex items-center px-4 sm:px-6 lg:px-8">
+                    <div class="text-white max-w-md sm:max-w-lg lg:max-w-xl fade-in">
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold font-futura mb-4 sm:mb-6 leading-tight">Just Do It</h1>
+                        <p class="text-lg sm:text-xl lg:text-2xl mb-6 sm:mb-8 font-medium">Elevate your performance with Nike’s cutting-edge footwear and apparel.</p>
+                        <div class="flex flex-wrap gap-4">
+                            <a href="#men" class="btn text-base sm:text-lg">Shop Now</a>
+                            <a href="#categories" class="btn bg-transparent border-2 border-white hover:bg-white hover:text-black text-base sm:text-lg">Explore</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Featured Products -->
+            <section id="featured" class="py-12 sm:py-16 lg:py-20 bg-gray-50 dark:bg-gray-900">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl sm:text-4xl font-bold font-futura mb-8 sm:mb-12 text-center fade-in">Featured Products</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
+                        <div class="card bg-white dark:bg-gray-800 overflow-hidden" style="--i: 1;" data-product-id="1">
+                            <a href="#product/1" class="block">
+                                <img src="https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/5597763d-0a36-43eb-b20b-68109e73fd3c/NIKE+AIR+MAX+1+SP.png" alt="Air Max" class="w-full h-60 sm:h-72 object-cover staggered-fade">
+                            </a>
+                            <div class="p-4 sm:p-6">
+                                <h3 class="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">Air Max 270</h3>
+                                <p class="text-gray-600 dark:text-gray-300 mb-4 text-base sm:text-lg">₹12,450</p>
+                                <button class="btn w-full text-center add-to-cart" data-product-id="1">Add to Cart</button>
+                            </div>
+                        </div>
+                        <div class="card bg-white dark:bg-gray-800 overflow-hidden" style="--i: 2;" data-product-id="2">
+                            <a href="#product/2" class="block">
+                                <img src="https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/02936188-aa1f-42e5-a8e5-f17bdd1f6130/NIKE+INTERACT+RUN.png" alt="React Infinity" class="w-full h-60 sm:h-72 object-cover staggered-fade">
+                            </a>
+                            <div class="p-4 sm:p-6">
+                                <h3 class="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">React Infinity Run</h3>
+                                <p class="text-gray-600 dark:text-gray-300 mb-4 text-base sm:text-lg">₹13,280</p>
+                                <button class="btn w-full text-center add-to-cart" data-product-id="2">Add to Cart</button>
+                            </div>
+                        </div>
+                        <div class="card bg-white dark:bg-gray-800 overflow-hidden" style="--i: 3;" data-product-id="3">
+                            <a href="#product/3" class="block">
+                                <img src="https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/fc874f3b-4556-4971-931f-79d1b5b4604e/AIR+ZOOM+PEGASUS+41.png" alt="Pegasus 39" class="w-full h-60 sm:h-72 object-cover staggered-fade">
+                            </a>
+                            <div class="p-4 sm:p-6">
+                                <h3 class="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">Pegasus 39</h3>
+                                <p class="text-gray-600 dark:text-gray-300 mb-4 text-base sm:text-lg">₹10,790</p>
+                                <button class="btn w-full text-center add-to-cart" data-product-id="3">Add to Cart</button>
+                            </div>
+                        </div>
+                        <div class="card bg-white dark:bg-gray-800 overflow-hidden" style="--i: 4;" data-product-id="4">
+                            <a href="#product/4" class="block">
+                                <img src="https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/54853762-c111-464d-be3b-f19d2498fe0e/FLEX+EXPERIENCE+RN+12.png" alt="Free RN" class="w-full h-60 sm:h-72 object-cover staggered-fade">
+                            </a>
+                            <div class="p-4 sm:p-6">
+                                <h3 class="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">Free RN 5.0</h3>
+                                <p class="text-gray-600 dark:text-gray-300 mb-4 text-base sm:text-lg">₹9,960</p>
+                                <button class="btn w-full text-center add-to-cart" data-product-id="4">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Promotional Banner -->
+            <section class="nike-gradient text-white py-12 sm:py-16 lg:py-20">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center fade-in">
+                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold font-futura mb-4 sm:mb-6">New Arrivals</h2>
+                    <p class="text-lg sm:text-xl lg:text-2xl mb-6 sm:mb-8 max-w-xl sm:max-w-2xl lg:max-w-3xl mx-auto">Discover Nike’s latest collections crafted for peak performance and bold style.</p>
+                    <a href="#featured" class="btn text-base sm:text-lg">Shop New Arrivals</a>
+                </div>
+            </section>
+
+            <!-- Categories -->
+            <section id="categories" class="py-12 sm:py-16 lg:py-20">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl sm:text-4xl font-bold font-futura mb-8 sm:mb-12 text-center fade-in">Shop by Category</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
+                        <div class="card relative rounded-xl overflow-hidden">
+                            <img src="https://static.nike.com/a/images/f_auto/dpr_1.4,cs_srgb/h_483,c_limit/1f190254-5eb8-4066-8d61-fb6209f489f7/men-s-shoes-clothing-accessories.png" alt="Men" class="w-full h-64 sm:h-80 lg:h-96 object-cover transition-transform duration-500 hover:scale-110">
+                            <div class="absolute inset-0 flex items-center justify-center bg-black/40 transition-opacity duration-300 hover:bg-black/20">
+                                <a href="#men" class="btn text-white shadow-lg text-base sm:text-lg">Shop Men</a>
+                            </div>
+                        </div>
+                        <div class="card relative rounded-xl overflow-hidden">
+                            <img src="https://static.nike.com/a/images/f_auto/dpr_1.4,cs_srgb/h_528,c_limit/0b699cf3-eab0-4d55-b467-f805b1236b5f/image.png" alt="Women" class="w-full h-64 sm:h-80 lg:h-96 object-cover transition-transform duration-500 hover:scale-110">
+                            <div class="absolute inset-0 flex items-center justify-center bg-black/40 transition-opacity duration-300 hover:bg-black/20">
+                                <a href="#women" class="btn text-white shadow-lg text-base sm:text-lg">Shop Women</a>
+                            </div>
+                        </div>
+                        <div class="card relative rounded-xl overflow-hidden">
+                            <img src="https://static.nike.com/a/images/f_auto/dpr_1.4,cs_srgb/h_483,c_limit/92542450-f9a2-45f3-95eb-7273f72c9e33/image.jpg" alt="Kids" class="w-full h-64 sm:h-80 lg:h-96 object-cover transition-transform duration-500 hover:scale-110">
+                            <div class="absolute inset-0 flex items-center justify-center bg-black/40 transition-opacity duration-300 hover:bg-black/20">
+                                <a href="#kids" class="btn text-white shadow-lg text-base sm:text-lg">Shop Kids</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Product Page Template -->
+        <div id="product-page" class="page hidden">
+            <section class="py-12 sm:py-16 lg:py-20">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="fade-in">
+                            <img id="product-image" src="" alt="Product" class="w-full h-80 sm:h-96 lg:h-[500px] object-cover rounded-xl">
+                        </div>
+                        <div class="fade-in">
+                            <h1 id="product-name" class="text-3xl sm:text-4xl font-bold font-futura mb-4"></h1>
+                            <p id="product-price" class="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 mb-6"></p>
+                            <p id="product-description" class="text-base sm:text-lg text-gray-700 dark:text-gray-200 mb-6"></p>
+                            <div class="mb-6">
+                                <label for="product-size" class="block text-base sm:text-lg font-semibold mb-2">Size</label>
+                                <select id="product-size" class="w-full sm:w-1/2 p-3 rounded-lg border dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                </select>
+                            </div>
+                            <div class="mb-6">
+                                <label for="product-quantity" class="block text-base sm:text-lg font-semibold mb-2">Quantity</label>
+                                <input type="number" id="product-quantity" min="1" value="1" class="w-24 p-3 rounded-lg border dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <button class="btn w-full sm:w-auto add-to-cart" data-product-id="">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Cart Page -->
+        <div id="cart-page" class="page hidden">
+            <section class="py-12 sm:py-16 lg:py-20">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <h1 class="text-3xl sm:text-4xl font-bold font-futura mb-8 sm:mb-12 text-center fade-in">Your Cart</h1>
+                    <div id="cart-items" class="space-y-6"></div>
+                    <div class="mt-8 flex justify-between items-center">
+                        <h2 class="text-xl sm:text-2xl font-semibold">Total: <span id="cart-total">₹0</span></h2>
+                        <button id="checkout-btn" class="btn">Proceed to Checkout</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 sm:py-16">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 sm:gap-12">
+            <div>
+                <h3 class="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 font-futura">Nike</h3>
+                <p class="text-gray-400 leading-relaxed text-sm sm:text-base">Just Do It. Shop the latest in athletic wear and accessories.</p>
+            </div>
+            <div>
+                <h3 class="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 font-futura">Products</h3>
+                <ul class="space-y-2 sm:space-y-3 text-gray-400 text-sm sm:text-base">
+                    <li><a href="#featured" class="hover:text-white transition">Footwear</a></li>
+                    <li><a href="#categories" class="hover:text-white transition">Apparel</a></li>
+                    <li><a href="#categories" class="hover:text-white transition">Accessories</a></li>
+                    <li><a href="#customise" class="hover:text-white transition">Customise</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 font-futura">Support</h3>
+                <ul class="space-y-2 sm:space-y-3 text-gray-400 text-sm sm:text-base">
+                    <li><a href="#" class="hover:text-white transition">Help</a></li>
+                    <li><a href="#" class="hover:text-white transition">Returns</a></li>
+                    <li><a href="#" class="hover:text-white transition">Shipping</a></li>
+                    <li><a href="#" class="hover:text-white transition">Contact Us</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 font-futura">Connect</h3>
+                <div class="flex space-x-4 sm:space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition" aria-label="Instagram"><i class="uil uil-instagram text-xl sm:text-2xl"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition" aria-label="Facebook"><i class="uil uil-facebook-f text-xl sm:text-2xl"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition" aria-label="Twitter"><i class="uil uil-twitter text-xl sm:text-2xl"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12 text-center text-gray-400 text-sm sm:text-base">
+            <p>© 2025 Nike, Inc. All Rights Reserved.</p>
+            <p>Designed by S N Mallick</p>
+        </div>
+    </footer>
+
+    <script>
+        // Product data
+        const products = [
+            {
+                id: 1,
+                name: "Air Max 270",
+                price: 12450,
+                image: "https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/5597763d-0a36-43eb-b20b-68109e73fd3c/NIKE+AIR+MAX+1+SP.png",
+                description: "The Nike Air Max 270 delivers visible air under every step, with a breathable mesh upper and responsive cushioning."
+            },
+            {
+                id: 2,
+                name: "React Infinity Run",
+                price: 13280,
+                image: "https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/02936188-aa1f-42e5-a8e5-f17bdd1f6130/NIKE+INTERACT+RUN.png",
+                description: "Designed for runners, the React Infinity Run offers a smooth ride with enhanced stability and cushioning."
+            },
+            {
+                id: 3,
+                name: "Pegasus 39",
+                price: 10790,
+                image: "https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/fc874f3b-4556-4971-931f-79d1b5b4604e/AIR+ZOOM+PEGASUS+41.png",
+                description: "The Pegasus 39 provides a perfect balance of responsiveness and comfort for all your runs."
+            },
+            {
+                id: 4,
+                name: "Free RN 5.0",
+                price: 9960,
+                image: "https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/54853762-c111-464d-be3b-f19d2498fe0e/FLEX+EXPERIENCE+RN+12.png",
+                description: "Experience barefoot-like freedom with the Free RN 5.0, designed for flexibility and natural movement."
+            }
+        ];
+
+        // Cart management
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        function updateCartCount() {
+            const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const cartCountElement = document.getElementById('cart-count');
+            cartCountElement.textContent = cartCount;
+            cartCountElement.classList.toggle('hidden', cartCount === 0);
+            updateCartDropdown();
+        }
+
+        function updateCartDropdown() {
+            const cartDropdownCount = document.getElementById('cart-dropdown-count');
+            const cartDropdownSubtotal = document.getElementById('cart-dropdown-subtotal');
+            const cartDropdownItems = document.getElementById('cart-dropdown-items');
+            const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+            cartDropdownCount.textContent = `${cartCount} Item${cartCount !== 1 ? 's' : ''}`;
+            cartDropdownSubtotal.textContent = `Subtotal: ₹${subtotal.toLocaleString('en-IN')}`;
+            cartDropdownItems.innerHTML = '';
+
+            if (cart.length === 0) {
+                cartDropdownItems.innerHTML = '<p class="text-gray-600 dark:text-gray-300 text-sm">Your cart is empty.</p>';
+            } else {
+                cart.forEach(item => {
+                    cartDropdownItems.innerHTML += `
+                        <div class="flex items-center space-x-3 py-2 border-b dark:border-gray-600 last:border-b-0">
+                            <img src="${item.image}" alt="${item.name}" class="w-12 h-12 object-cover rounded">
+                            <div class="flex-1">
+                                <p class="text-sm font-semibold text-gray-900 dark:text-white">${item.name}</p>
+                                <p class="text-xs text-gray-600 dark:text-gray-300">Size: ${item.size} | Qty: ${item.quantity}</p>
+                            </div>
+                            <p class="text-sm text-gray-900 dark:text-white">₹${(item.price * item.quantity).toLocaleString('en-IN')}</p>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        function updateCart() {
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            renderCartPage();
+        }
+
+        function addToCart(productId, quantity = 1, size = '7') {
+            const product = products.find(p => p.id === parseInt(productId));
+            if (!product) return;
+
+            const cartItem = cart.find(item => item.id === productId && item.size === size);
+            if (cartItem) {
+                cartItem.quantity += quantity;
+            } else {
+                cart.push({ id: productId, name: product.name, price: product.price, quantity, size, image: product.image });
+            }
+            updateCart();
+        }
+
+        // Navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+            document.getElementById(pageId).classList.remove('hidden');
+            document.getElementById('mobile-menu').classList.add('hidden');
+            document.getElementById('cart-dropdown').classList.add('hidden');
+            document.getElementById('user-dropdown').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderProductPage(productId) {
+            const product = products.find(p => p.id === parseInt(productId));
+            if (!product) return;
+
+            document.getElementById('product-image').src = product.image;
+            document.getElementById('product-image').alt = product.name;
+            document.getElementById('product-name').textContent = product.name;
+            document.getElementById('product-price').textContent = `₹${product.price.toLocaleString('en-IN')}`;
+            document.getElementById('product-description').textContent = product.description;
+            document.getElementById('product-size').value = '7';
+            document.getElementById('product-quantity').value = 1;
+            document.querySelector('#product-page .add-to-cart').dataset.productId = productId;
+            showPage('product-page');
+        }
+
+        function renderCartPage() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            cartItemsContainer.innerHTML = '';
+            let total = 0;
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p class="text-center text-gray-600 dark:text-gray-300 text-lg">Your cart is empty.</p>';
+            } else {
+                cart.forEach((item, index) => {
+                    const itemTotal = item.price * item.quantity;
+                    total += itemTotal;
+                    cartItemsContainer.innerHTML += `
+                        <div class="flex flex-col sm:flex-row items-center justify-between bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-md fade-in">
+                            <div class="flex items-center space-x-4">
+                                <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-lg">
+                                <div>
+                                    <h3 class="text-lg sm:text-xl font-semibold">${item.name}</h3>
+                                    <p class="text-gray-600 dark:text-gray-300">Size: ${item.size}</p>
+                                    <p class="text-gray-600 dark:text-gray-300">₹${item.price.toLocaleString('en-IN')} x ${item.quantity}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4 mt-4 sm:mt-0">
+                                <input type="number" min="1" value="${item.quantity}" class="w-16 p-2 rounded-lg border dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white update-quantity" data-index="${index}">
+                                <button class="text-red-500 hover:text-red-700 remove-item" data-index="${index}">
+                                    <i class="uil uil-trash-alt text-xl"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            document.getElementById('cart-total').textContent = `₹${total.toLocaleString('en-IN')}`;
+            document.querySelectorAll('.update-quantity').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const index = e.target.dataset.index;
+                    cart[index].quantity = parseInt(e.target.value);
+                    updateCart();
+                });
+            });
+            document.querySelectorAll('.remove-item').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const index = e.target.closest('.remove-item').dataset.index;
+                    cart.splice(index, 1);
+                    updateCart();
+                });
+            });
+            showPage('cart-page');
+        }
+
+        // Search functionality
+        function performSearch(query) {
+            const resultsContainer = document.getElementById('search-results');
+            resultsContainer.innerHTML = '';
+            const filteredProducts = products.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
+            if (filteredProducts.length === 0) {
+                resultsContainer.innerHTML = '<p class="text-gray-600 dark:text-gray-300">No products found.</p>';
+            } else {
+                filteredProducts.forEach(product => {
+                    resultsContainer.innerHTML += `
+                        <a href="#product/${product.id}" class="block p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition">
+                            <div class="flex items-center space-x-4">
+                                <img src="${product.image}" alt="${product.name}" class="w-16 h-16 object-cover rounded">
+                                <div>
+                                    <h3 class="text-base sm:text-lg font-semibold">${product.name}</h3>
+                                    <p class="text-gray-600 dark:text-gray-300">₹${product.price.toLocaleString('en-IN')}</p>
+                                </div>
+                            </div>
+                        </a>
+                    `;
+                });
+            }
+        }
+
+        // Event listeners
+        document.getElementById('mobile-menu-toggle').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            document.getElementById('theme-toggle').innerHTML = document.body.classList.contains('dark') 
+                ? '<i class="uil uil-sun text-xl sm:text-2xl"></i>' 
+                : '<i class="uil uil-moon text-xl sm:text-2xl"></i>';
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        });
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark');
+            document.getElementById('theme-toggle').innerHTML = '<i class="uil uil-sun text-xl sm:text-2xl"></i>';
+        }
+
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', () => {
+                button.classList.add('bounce');
+                setTimeout(() => button.classList.remove('bounce'), 300);
+            });
+        });
+
+        document.getElementById('search-toggle').addEventListener('click', () => {
+            document.getElementById('search-modal').classList.toggle('hidden');
+            document.getElementById('search-input').focus();
+        });
+
+        document.getElementById('close-search').addEventListener('click', () => {
+            document.getElementById('search-modal').classList.add('hidden');
+            document.getElementById('search-input').value = '';
+            document.getElementById('search-results').innerHTML = '';
+        });
+
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            performSearch(e.target.value);
+        });
+
+        document.querySelector('.indicator').parentElement.addEventListener('click', () => {
+            document.getElementById('cart-dropdown').classList.toggle('hidden');
+        });
+
+        document.querySelector('.avatar').parentElement.addEventListener('click', () => {
+            document.getElementById('user-dropdown').classList.toggle('hidden');
+        });
+
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const productId = e.target.dataset.productId;
+                const size = document.getElementById('product-size')?.value || '7';
+                const quantity = parseInt(document.getElementById('product-quantity')?.value || 1);
+                addToCart(productId, quantity, size);
+            });
+        });
+
+        document.getElementById('checkout-btn').addEventListener('click', () => {
+            alert('Checkout functionality is not implemented in this demo.');
+        });
+
+        // Handle navigation
+        document.querySelectorAll('a[href^="#"]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const href = link.getAttribute('href');
+                if (href === '#home') {
+                    showPage('home');
+                } else if (href.startsWith('#product/')) {
+                    const productId = href.split('/')[1];
+                    renderProductPage(productId);
+                } else if (href === '#cart') {
+                    renderCartPage();
+                } else {
+                    const section = document.querySelector(href);
+                    if (section) {
+                        section.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            });
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.indicator') && !e.target.closest('#cart-dropdown')) {
+                document.getElementById('cart-dropdown').classList.add('hidden');
+            }
+            if (!e.target.closest('.avatar') && !e.target.closest('#user-dropdown')) {
+                document.getElementById('user-dropdown').classList.add('hidden');
+            }
+        });
+
+        // Initial cart update
+        updateCartCount();
+    </script>
+</body>
+</html>
